@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="format-detection" content="telephone=no">
+<title></title>
+<link rel="stylesheet" href="css/reset.css">
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="wrapper">
+    <div class="slider-wrap">
+        <div class="slider-area">
+            <ul class="slider-list clearfix">
+                <li><img src="img/1.jpg" alt=""></li>
+                <li><img src="img/2.jpg" alt=""></li>
+                <li><img src="img/3.jpg" alt=""></li>
+                <li><img src="img/4.jpg" alt=""></li>
+            </ul>
+            <button type="button" class="slider-ctrl-btn prev" data-ctrl="prev"></button>
+            <button type="button" class="slider-ctrl-btn next" data-ctrl="next"></button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript" src="js/jquery.js"></script>
+<script type="text/javascript">
+// 今回やるのはスライドショーです。
+// .animateを使い、slider-listのleftを-方向にすることでアニメーションを実現している。
+// 右方向は .next を押すと移動し、左方向は .prev を押すと移動する。また右端にいる状態で .next を押すと最初の位置に戻り、
+// 左端にいる状態で .prev を押すと最後の位置に移動する。data属性にprev,nextを記述しているのでこちらを取得すると楽です。
+// ちなみアニメーションですが配列を用いてそれぞれのポジションを記憶させ、添字を用いてそのポジションに移動させるようにするととても楽です。
+// .animate({}) cssのプロパティを一定時間かけて変化させます。アニメーションです。
+// .data() 要素のdata属性を取得します。引数が2つある場合、セットします。
+// .width() 要素の幅を取得します。
+// .length 要素の個数を取得します。
+$(function(){
+  var length = $(".slider-list li").length,// 画像の数 4
+      pictureSize = $(".slider-list li").width(), //画像のサイズ 600px
+      postionData = [], //positionの値を入れる配列
+      clickCount = 0; //クリックした回数
+  for(var i = 0;i < length;i++) {
+    postionData[i] = pictureSize*i; //positionの値を配列に代入『0,600.1200,1800』で代入される
+  }
+  $(".slider-ctrl-btn").click(function(){ //ボタンクリックでイベント発生
+    var data = $(this).data("ctrl"); //nextかprevの値を変数に代入
+    switch(data){//switch文でnextの場合の処理とprevの場合の処理をする。
+      case "next":
+      if(clickCount < length-1){//clickCountが3以下の場合
+        clickCount++//clickCountをブラス1する
+      }else{
+        clickCount = 0;//ここにきた場合、画像の一番右端の状態でボタンをクリック(4回目のクリック)しているため最初の画像に戻る様0を設定
+      };
+      break;
+      case "prev":
+      if(clickCount == 0){
+        clickCount = length-1;//clickCountが0の場合、最初の画像が表示されている状態でのクリックのため右端に飛ぶ様にlength-1を代入。
+      }else {
+        clickCount--;//ここにきた場合、最初の画像ではないため、マイナスして画像を手前にスライドさせる
+      }
+    }
+    $(".slider-list").animate({
+      left : -postionData[clickCount]//画像スライドのアニメーション実行
+    },500);
+  })
+});
+
+</script>
+</body>
+</html>
